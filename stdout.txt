@@ -1,0 +1,672 @@
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 1   command =   alloc   operand = 0
+shared variable stack: [0]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 2   command =   alloc   operand = 1
+shared variable stack: [0, 0]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 3   command =   alloc   operand = 2
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 4   command =     par   operand = 1
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 5   command =    rjmp   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 30   command =     par   operand = 1
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 31   command =    rjmp   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 23   command =   label   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 24   command =   label   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 25   command =     nop   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 26   command =     nop   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 27   command =     nop   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 28   command =    rjmp   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 49   command =   label   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 50   command =   label   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 51   command =     nop   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 52   command =     nop   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 53   command =     nop   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 54   command =    rjmp   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 6   command =   label   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 7   command =    rjmp   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 32   command =   label   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 33   command =    rjmp   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 8   command = restore   operand = 2
+shared variable stack: [0, 0, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 9   command =     nop   operand = 0
+shared variable stack: [0, 0, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 10   command =    rjmp   operand = 0
+shared variable stack: [0, 0, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 34   command = restore   operand = 1
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 35   command =     nop   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 36   command =    rjmp   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 17   command =   label   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 18   command =   label   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 19   command =     nop   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 20   command =     nop   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 21   command =     nop   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 22   command =    rjmp   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 43   command =   label   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 44   command =   label   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 45   command =     nop   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 46   command =     nop   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 47   command =     nop   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 48   command =    rjmp   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 24   command =   label   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 25   command =     nop   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 26   command =     nop   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 27   command =     nop   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 28   command =    rjmp   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 50   command =   label   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 51   command =     nop   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 52   command =     nop   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 53   command =     nop   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 54   command =    rjmp   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 6   command =   label   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 7   command =    rjmp   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 32   command =   label   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 33   command =    rjmp   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 11   command =   label   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 12   command = restore   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 13   command =     nop   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 14   command =     nop   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 15   command =     nop   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 16   command =    rjmp   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 37   command =   label   operand = 0
+shared variable stack: [0, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 38   command = restore   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 39   command =     nop   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 40   command =     nop   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 41   command =     nop   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 42   command =    rjmp   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 18   command =   label   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 19   command =     nop   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 20   command =     nop   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 21   command =     nop   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 22   command =    rjmp   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 44   command =   label   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 45   command =     nop   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 46   command =     nop   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 47   command =     nop   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 48   command =    rjmp   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 24   command =   label   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 25   command =     nop   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 26   command =     nop   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 27   command =     nop   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 28   command =    rjmp   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 50   command =   label   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 51   command =     nop   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 52   command =     nop   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 53   command =     nop   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 54   command =    rjmp   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 6   command =   label   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 7   command =    rjmp   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 32   command =   label   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 33   command =    rjmp   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 11   command =   label   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 12   command = restore   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 13   command =     nop   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 14   command =     nop   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 15   command =     nop   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 16   command =    rjmp   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 37   command =   label   operand = 0
+shared variable stack: [1, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 38   command = restore   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 39   command =     nop   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 40   command =     nop   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 41   command =     nop   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 42   command =    rjmp   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 18   command =   label   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 19   command =     nop   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 20   command =     nop   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 21   command =     nop   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 22   command =    rjmp   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 44   command =   label   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 45   command =     nop   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 46   command =     nop   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 47   command =     nop   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 48   command =    rjmp   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 24   command =   label   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 25   command =     nop   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 26   command =     nop   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 27   command =     nop   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 28   command =    rjmp   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 50   command =   label   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 51   command =     nop   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 52   command =     nop   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 53   command =     nop   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 54   command =    rjmp   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 6   command =   label   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 7   command =    rjmp   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 32   command =   label   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 33   command =    rjmp   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 11   command =   label   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 12   command = restore   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 13   command =     nop   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 14   command =     nop   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 15   command =     nop   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 16   command =    rjmp   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 37   command =   label   operand = 0
+shared variable stack: [2, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 38   command = restore   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 39   command =     nop   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 40   command =     nop   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 41   command =     nop   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 42   command =    rjmp   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 18   command =   label   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 19   command =     nop   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 20   command =     nop   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 21   command =     nop   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 22   command =    rjmp   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 44   command =   label   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 45   command =     nop   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 46   command =     nop   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 47   command =     nop   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 48   command =    rjmp   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 24   command =   label   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 25   command =     nop   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 26   command =     nop   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 27   command =     nop   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process2 execute~~~~~~~~
+pc = 28   command =    rjmp   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 50   command =   label   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 51   command =     nop   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 52   command =     nop   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 53   command =     nop   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process1 execute~~~~~~~~
+pc = 54   command =    rjmp   operand = 0
+shared variable stack: [3, 1, 1]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 56   command = restore   operand = 2
+shared variable stack: [3, 1, 0]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 57   command =     nop   operand = 0
+shared variable stack: [3, 1, 0]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 58   command = restore   operand = 1
+shared variable stack: [3, 0, 0]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 59   command =     nop   operand = 0
+shared variable stack: [3, 0, 0]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 60   command = restore   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 61   command =     nop   operand = 0
+shared variable stack: [0, 0, 0]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 62   command =    free   operand = 2
+shared variable stack: [0, 0]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 63   command =    free   operand = 1
+shared variable stack: [0]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 64   command =    free   operand = 0
+shared variable stack: []
+
