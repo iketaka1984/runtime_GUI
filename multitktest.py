@@ -124,7 +124,7 @@ class MainFrame(tk.Frame):
             self.file1.set(filepath)
             with open(self.file1.get(),'r') as f:
                 buf = f.read()
-            with open("output_test.txt",'w') as f2:
+            with open("code.txt",'w') as f2:
                 f2.write(buf)
             messagebox.showinfo("message","renamed to code.txt and saved this directory")
             self.flag = self.flag + 1
@@ -132,7 +132,7 @@ class MainFrame(tk.Frame):
             messagebox.showinfo("message","you've already selected a stack machine code")
         
     def button2_clicked(self):
-        #vmprocess = Process(target=vm.main,args=('f',self.frame))
+        #vmprocess = Process(target=vm.main,args=('f',self))
         #vmprocess.start()
         #process_create(self.frame)
         if self.flag == 1:
