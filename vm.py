@@ -131,7 +131,7 @@ def executedcommand(stack,rstack,lstack,com,opr,pc,pre,top,rtop,ltop,address,val
         return (pc+1,pre,stack,top,rtop,tablecount)
 
 #コードの実行
-def execution(mode,lock,mlock,command,opr,start,end,stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag,parpath,fbtmode):
+def execution(mode,lock,mlock,command,opr,start,end,stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag,parpath,fbtmode,count_pc):
     pc=start
     pre=pc
     top=len(stack)
@@ -166,6 +166,17 @@ def execution(mode,lock,mlock,command,opr,start,end,stack,address,value,tablecou
                 with open("stdout.txt",mode='a') as f:
                     f.write("~~~~~~~~Process"+str(parpath)+" execute~~~~~~~~\n")
                     f.write("pc = "+str(pc+1)+"   command = "+command1+"   operand = "+str(opr[pc])+"\n")
+                if mode == '2':
+                    if parpath != 0:
+                        with open("stdcash.txt","w") as f:
+                            f.write("")
+                        with open("stdcash.txt","a") as f:
+                            f.write("~~~~~~~~Process"+str(parpath)+" execute~~~~~~~~\n")
+                            f.write("pc = "+str(pc+1)+"   command = "+command1+"   operand = "+str(opr[pc])+"\n")
+                    elif parpath == 0:
+                        with open("stdcash.txt",'a') as f:
+                            f.write("~~~~~~~~Process"+str(parpath)+" execute~~~~~~~~\n")
+                            f.write("pc = "+str(pc+1)+"   command = "+command1+"   operand = "+str(opr[pc])+"\n")                            
             #コマンドを実行する関数に処理を渡す
             (pc,pre,stack,top,rtop,tablecount)=executedcommand(stack,rstack,lstack,command[pc],opr[pc],pc,pre,top,rtop,ltop,address,value,parpath,tablecount,fbtmode)
             if fbtmode!='q':
@@ -174,6 +185,35 @@ def execution(mode,lock,mlock,command,opr,start,end,stack,address,value,tablecou
                 with open("stdout.txt",mode='a') as f:
                     f.write("executing stack:       "+str(stack[:])+"\n")
                     f.write("shared variable stack: "+str(value[0:tablecount.value])+"\n\n")
+                if mode == '2':
+                    if parpath != 0:
+                        with open("stdcash.txt",mode='a') as f:
+                            f.write("executing stack:       "+str(stack[:])+"\n")
+                            f.write("shared variable stack: "+str(value[0:tablecount.value])+"\n\n")
+                    elif parpath == 0:
+                        with open("stdcash.txt",'a') as f:
+                            f.write("executing stack:       "+str(stack[:])+"\n")
+                            f.write("shared variable stack: "+str(value[0:tablecount.value])+"\n\n")
+                    if command[pre] == 7:
+                        with open("labelcash.txt",mode='w') as f:
+                            f.write(""+str(count_pc-lstack[ltop.value-2])+" "+str(lstack[ltop.value-1])+"\n")
+                    else:
+                        with open("labelcash.txt","w") as f:
+                            f.write("")
+                
+                    if parpath != 0:
+                        if command[pre] == 3:
+                            with open("valuecash.txt",'w') as f:
+                                f.write("")
+                            with open("valuecash.txt",'a') as f:
+                                f.write(""+str(rstack[rtop.value-2])+" "+str(rstack[rtop.value-1])+"\n")
+                        else:
+                            with open("valuecash.txt",'w') as f:
+                                f.write("")
+                    elif parpath == 0:
+                        if command[pre] == 3:
+                            with open("valuecash.txt",'a') as f:
+                                f.write(""+str(rstack[rtop.value-2])+" "+str(rstack[rtop.value-1])+"\n")
                 #if parpath != 0:
                 #    queue.put("~~~~~~~~Process"+str(parpath)+" execute~~~~~~~~\npc = "+str(pre+1)+"   command = "+command1+"   operand = "+str(opr[pre])+"\nexecuting stack:       "+str(stack[:])+"\nshared variable stack: "+str(value[0:tablecount.value])+"")
             #表示モードによってプロセスの鍵の管理の仕方が違う
@@ -209,6 +249,10 @@ def execution(mode,lock,mlock,command,opr,start,end,stack,address,value,tablecou
                 with open("stdout.txt",mode='a') as f:
                     f.write("~~~~~~~~Process"+str(parpath)+" execute~~~~~~~~\n")
                     f.write("pc = "+str(pc+1)+"   command = "+command1+"   operand = "+str(opr[pc])+"\n")
+                if mode == '2':
+                    with open("stdcash.txt","w") as f:
+                        f.write("~~~~~~~~Process"+str(parpath)+" execute~~~~~~~~\n")
+                        f.write("pc = "+str(pc+1)+"   command = "+command1+"   operand = "+str(opr[pc])+"\n")
             (pc,pre,stack,top,rtop,tablecount)=executedcommand(stack,rstack,lstack,command[pc],opr[pc],pc,pre,top,rtop,ltop,address,value,parpath,tablecount,fbtmode)
             if fbtmode!='q':
                 print("shared variable stack: "+str(value[0:tablecount.value])+"")
@@ -296,12 +340,16 @@ def forward(ltop,rtop,fbtmode,value,lstack,rstack,count_pc,com,opr):
         for i in range(0,ltop,2):
             f.write(""+str(count_pc-lstack[i])+" "+str(lstack[i+1])+" ")
         f.close()
+        with open("labelcash.txt","w") as f:
+            f.write("")
 
         path3='rstack.txt'
         f3=open(path3,'w')
         for i in range(0,rtop,1):
             f3.write(""+str(rstack[i])+" ")
         f3.close()
+        with open("valuecash.txt",'w') as f:
+            f.write("")
 
         path6='stack.txt'
         f6=open(path6,'w')
@@ -310,8 +358,8 @@ def forward(ltop,rtop,fbtmode,value,lstack,rstack,count_pc,com,opr):
         f6.close()
 
 #if __name__ == '__main__':
-def main(fbtmode,self):
-    #label1 = tkinter.Label(frame,text="Hellom Worlf!")
+def main(fbtmode,vm_value,mode_select,self):
+    #label1 = tkinter.Label(frame,text="Hello World!")
     #label1.pack(side="top")
     start_time = time.time()
     start=[]
@@ -357,7 +405,6 @@ def main(fbtmode,self):
     #    k=k+1
     #    tablecount=tablecount+1
 
-
     backward(fbtmode)
 
     if fbtmode=='q':
@@ -376,68 +423,81 @@ def main(fbtmode,self):
                 mode='1'
             else:
                 #mode=input('mode   1:auto 2:select >> ')
-                mode='1'
+                mode= mode_select
             #逐次実行の部分を実行
-            stack=execution(mode,lockfree,lockfree,com,opr,0,start[0],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode)
+            stack=execution(mode,lockfree,lockfree,com,opr,0,start[0],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc)
             if mode=='2':
                 for i in range(0,parflag,1):
                     lock[i].acquire()
                 process={}
                 #並列プロセスの生成
                 for i in range(0,parflag,1):        
-                    process[i]=Process(target=execution,args=(mode,lock[i],mlock,com,opr,start[i],end[i],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag[i],i+1,fbtmode))
+                    process[i]=Process(target=execution,args=(mode,lock[i],mlock,com,opr,start[i],end[i],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag[i],i+1,fbtmode,count_pc))
             if mode=='1':
                 process={}
                 #並列プロセスの生成
                 for i in range(0,parflag,1):        
-                    process[i]=Process(target=execution,args=(mode,lock[0],mlock,com,opr,start[i],end[i],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag[i],i+1,fbtmode))
+                    process[i]=Process(target=execution,args=(mode,lock[0],mlock,com,opr,start[i],end[i],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag[i],i+1,fbtmode,count_pc))
             for i in range(0,parflag,1):
                     process[i].start()
             #モニター: メインプロセスでサブプロセスの実行を管理する
             if mode=='2':
-                while a!='esc':
-                    a=input('>> ')
+                while a!=3:
+                    vm_value.value = 0
+                    #a=input('>> ')
+                    while vm_value.value == 0:
+                        i = 0
+                    a = vm_value.value
                     mlock.acquire(False)
                     ifflag=0
                     for i in range(0,parflag,1):
-                        if a==str(i+1) and endflag[i].value!=1 and ifflag==0:
+                        if a==i+1 and endflag[i].value!=1 and ifflag==0:
                             ifflag=1
                             lock[i].release()
-                            if not queue.empty():
-                                data = queue.get(False)
-                                sys.stdout = self.write(data)
+                            #if not queue.empty():
+                            #    data = queue.get(False)
+                            #    sys.stdout = self.write(data)
+                    if endflag[0].value == 1 or endflag[1].value ==1:
+                        with open("labelcash.txt",'w') as f:
+                            f.write("")
+                        with open("stdcash.txt",'w') as f:
+                            f.write("")
             for i in range(0,parflag,1):
                 process[i].join()
             for i in range(0,tablecount.value,1):
                 stack[i]=value[i]
-            execution(mode,lockfree,lockfree,com,opr,end[parflag-1]+1,len(com),stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode)
-            with open("stdout.txt",mode='r') as f:
-                buf = f.read()
-                sys.stdout = self.write(buf)
+            with open("stdcash.txt",'w') as f:
+                f.write("")
+            execution(mode,lockfree,lockfree,com,opr,end[parflag-1]+1,len(com),stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc)
+            if mode_select == '1':
+                with open("stdout.txt",mode='r') as f:
+                    buf = f.read()
+                    sys.stdout = self.write(buf)
         elif parflag==0:
             mode='1'
-            execution(mode,lockfree,mlock,com,opr,0,len(com),stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode)
+            execution(mode,lockfree,mlock,com,opr,0,len(com),stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc)
         forward(ltop.value,rtop.value,fbtmode,value,lstack,rstack,count_pc,com,opr)
-        with open("lstack.txt",'r') as lf:
-            buf = lf.read()
-            buf2 =re.findall(r'[-]?\d+',buf)
-            for i in range(0,len(buf2),2):
-                sys.stdout = self.lwrite(buf2[i])
-                sys.stdout = self.lwrite(' ')
-                if int(buf2[i]) < 10:
+        if mode_select == '1':
+            with open("lstack.txt",'r') as lf:
+                buf = lf.read()
+                buf2 =re.findall(r'[-]?\d+',buf)
+                for i in range(0,len(buf2),2):
+                    sys.stdout = self.lwrite(buf2[i])
                     sys.stdout = self.lwrite(' ')
-                sys.stdout = self.lwrite(buf2[i+1])
-                sys.stdout = self.lwrite('\n')
-        with open("rstack.txt",'r') as rf:
-            buf = rf.read()
-            buf2 = re.findall(r'[-]?\d+',buf)
-            for i in range(0,len(buf2),2):
-                sys.stdout = self.rwrite(buf2[i])
-                sys.stdout = self.rwrite(' ')
-                if int(buf2[i]) < 10:
+                    if int(buf2[i]) < 10:
+                        sys.stdout = self.lwrite(' ')
+                    sys.stdout = self.lwrite(buf2[i+1])
+                    sys.stdout = self.lwrite('\n')
+            with open("rstack.txt",'r') as rf:
+                buf = rf.read()
+                buf2 = re.findall(r'[-]?\d+',buf)
+                for i in range(0,len(buf2),2):
+                    sys.stdout = self.rwrite(buf2[i])
                     sys.stdout = self.rwrite(' ')
-                sys.stdout = self.rwrite(buf2[i+1])
-                sys.stdout = self.rwrite('\n')
+                    if int(buf2[i]) < 10:
+                        sys.stdout = self.rwrite(' ')
+                    sys.stdout = self.rwrite(buf2[i+1])
+                    sys.stdout = self.rwrite('\n')
 
     elif fbtmode=='b':
         (start,end,com,opr,count_pc,parflag)=coderead(start,end,com,opr,count_pc,parflag,fbtmode)
@@ -465,10 +525,10 @@ def main(fbtmode,self):
             for i in range(0,parflag,1):
                 lock[i].acquire()
             process={}
-            execution(mode,lockfree,lockfree,com,opr,0,end[0],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode)
+            execution(mode,lockfree,lockfree,com,opr,0,end[0],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc)
             #並列プロセスの生成
             for i in range(0,parflag,1):
-                process[i]=Process(target=execution,args=(mode,lock[parflag-i-1],mlock,com,opr,end[i],start[i],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag[i],parflag-i,fbtmode))
+                process[i]=Process(target=execution,args=(mode,lock[parflag-i-1],mlock,com,opr,end[i],start[i],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag[i],parflag-i,fbtmode,count_pc))
             for i in range(0,parflag,1):
                 process[i].start()
             a='2'
@@ -496,12 +556,13 @@ def main(fbtmode,self):
             for i in range(0,parflag,1):
                 process[i].join()
             #逐次実行の部分を実行
-            execution(mode,lockfree,lockfree,com,opr,start[parflag-1]+1,count_pc,stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode)
+            execution(mode,lockfree,lockfree,com,opr,start[parflag-1]+1,count_pc,stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc)
+        
             with open("stdout.txt",'r') as f:
                 buf = f.read()
                 sys.stdout = self.write(buf)
         elif parflag==0:
-            execution(mode,lockfree,lockfree,com,opr,0,len(com),stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode)
+            execution(mode,lockfree,lockfree,com,opr,0,len(com),stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc)
     elif fbtmode=='t':
         (start,end,com,opr,count_pc,parflag)=coderead(start,end,com,opr,count_pc,parflag,fbtmode)
         forward(ltop.value,rtop.value,fbtmode,value,lstack,rstack,count_pc,com,opr)

@@ -1,5 +1,5 @@
 import multiprocessing as mp
-from multiprocessing import Process,Manager
+from multiprocessing import Process,Manager,Value
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
@@ -14,6 +14,8 @@ class MainFrame(tk.Frame):
     def __init__(self,master=None):
         super().__init__(master)
         self.flag = 0
+        self.vm_value = Value('i',0)
+        self.mode_select = '0'
         self.grid()
         self.master.title("virtual machine")
         self.master.geometry("1020x740")
@@ -56,7 +58,7 @@ class MainFrame(tk.Frame):
         # create text window
         #self.scroll = tk.Scrollbar(self.main_frm)
         self.text_label = ttk.Label(self.main_frm, text="result of execution",font=self.font1)
-        self.text = tk.Text(self.main_frm,height=40,width=50)
+        self.text = tk.Text(self.main_frm,height=30,width=50)
         self.mode_label = ttk.Label(self.main_frm, text="select mode",font=self.font2)
         # create stack text window
         self.fonts = font.Font(family='Helvetica',size=20,weight='bold')
@@ -76,28 +78,45 @@ class MainFrame(tk.Frame):
         #create again btn
         self.again_box = ttk.Entry(self.main_frm)
         self.again_btn = ttk.Button(self.main_frm, text="execute again",command=self.button9_clicked)
-
-
+        #create exec btn
+        self.exec_box = ttk.Entry(self.main_frm)
+        self.exec_btn = ttk.Button(self.main_frm, text="exec process 1", command=self.button10_clicked)
+        self.exec2_box = ttk.Entry(self.main_frm)
+        self.exec2_btn = ttk.Button(self.main_frm, text="exec process 2", command=self.button11_clicked)
+        self.exec3_box = ttk.Entry(self.main_frm)
+        self.exec3_btn = ttk.Button(self.main_frm, text="exec esc", command=self.button12_clicked)
+        #create auto and select mode btn
+        self.auto_mode_box = ttk.Entry(self.main_frm)
+        self.auto_mode_btn = ttk.Button(self.main_frm, text="auto mode", command=self.button13_clicked)
+        self.select_mode_box = ttk.Entry(self.main_frm)
+        self.select_mode_btn = ttk.Button(self.main_frm, text="step mode", command=self.button14_clicked)
+        self.asmode_label = ttk.Label(self.main_frm, text="select auto or step mode",font=self.font2)
+        
         # ウィジェットの配置
-        self.folder_label.grid(column=1, row=0, pady=10)
-        self.folder_box.grid(column=2, row=0)#, sticky=tk.EW, padx=5)
-        self.folder_btn.grid(column=3, row=0)
-        self.fapp_btn.grid(column=2, row=1)
-        self.bapp_btn.grid(column=2, row=2)
-        self.tapp_btn.grid(column=3, row=1)
-        self.std_btn.grid(column=4, row=1)
-        self.code_btn.grid(column=5,row=1)
-        self.mode_label.grid(column=1, row=1,pady=10)
+        self.asmode_label.grid(column=1,row=0,pady=10)
+        self.auto_mode_btn.grid(column=2,row=0)
+        self.select_mode_btn.grid(column=3,row=0)
+        self.folder_label.grid(column=1, row=1, pady=10)
+        self.folder_box.grid(column=2, row=1)#, sticky=tk.EW, padx=5)
+        self.folder_btn.grid(column=3, row=1)
+        self.fapp_btn.grid(column=2, row=2)
+        self.bapp_btn.grid(column=2, row=3)
+        self.tapp_btn.grid(column=3, row=2)
+        self.std_btn.grid(column=4, row=2)
+        self.code_btn.grid(column=5,row=2)
+        self.mode_label.grid(column=1, row=2,pady=10)
         self.text.grid(column=0, row=10)
-        self.clear_btn.grid(column=3, row=2)
-        self.again_btn.grid(column=4,row=2)
-        self.icode_btn.grid(column=5,row=2)
-        self.text_label.grid(column=0,row=2, pady=19)
+        self.clear_btn.grid(column=3, row=3)
+        self.again_btn.grid(column=4,row=3)
+        self.icode_btn.grid(column=5,row=3)
+        self.exec_btn.grid(column=3,row=4)
+        self.exec2_btn.grid(column=4,row=4)
+        self.exec3_btn.grid(column=5,row=4)
+        self.text_label.grid(column=0,row=9, pady=19)
         self.ltext_label.grid(column=1,row=9)
         self.label_text.grid(column=1,row=10)
         self.rtext_label.grid(column=2,row=9)
         self.value_text.grid(column=2,row=10)
-
 
     #    self.MainCounter = 0
     #    self.MainMsg = "main({}):{}".format(\
@@ -110,9 +129,9 @@ class MainFrame(tk.Frame):
     #    self.SubProcess = Process(target=SubProcess\
     #                              , args=(self.shareDict,))
     #    self.SubProcess.start()
-    #def __del__(self):
-    #    print("killing me")
-    #    self.SubProcess.terminate()
+    def delete(self):
+        print("killing me")
+        self.vmprocess.terminate()
     #def CreateWidgets(self):
     #    self.MainLabel = tk.Label(self\
     #            ,text = str(self.MainMsg)\
@@ -147,14 +166,23 @@ class MainFrame(tk.Frame):
             messagebox.showinfo("message","you've already selected a stack machine code")
         
     def button2_clicked(self):
-        #vmprocess = Process(target=vm.main,args=('f'))
-        #vmprocess.start()
+        if self.mode_select == '2':
+            self.vmprocess = Process(target=vm.main,args=('f',self.vm_value,self.mode_select,0))
+            self.vmprocess.start()
+            sleep(0.3)
+            with open("stdout.txt",'r') as f:
+                self.buf = f.read() 
+            sys.stdout = self.write(self.buf)
+            with open("valuecash.txt",'r') as f:
+                self.buf = f.read()
+            sys.stdout = self.rwrite(self.buf)
+        elif self.mode_select == '1':
         #process_create(self.frame)
-        if self.flag == 1:
-            vm.main('f',self)
-            self.flag = self.flag + 1
-        elif self.flag != 1:
-            messagebox.showinfo("message","you can't select this mode now")
+            if self.flag == 1:
+                vm.main('f',self.vm_value,self.mode_select,self)
+                self.flag = self.flag + 1
+            elif self.flag != 1:
+                messagebox.showinfo("message","you can't select this mode now")
     def button3_clicked(self):
         if self.flag != 0 or self.flag != 1:
             self.window.append(tk.Toplevel())
@@ -162,13 +190,17 @@ class MainFrame(tk.Frame):
         else:
             messagebox.showinfo("message","you can't select this mode")
     def button4_clicked(self):
-        if self.flag == 2:
-            vm.main('b',self)
-            self.flag = self.flag + 1
-        elif self.flag != 2:
-            messagebox.showinfo("message","you can't select this mode now")
+        #if self.mode_select == '1':
+        #if self.flag == 2:
+        vm.main('b',self.vm_value,self.mode_select,self)
+        #    self.flag = self.flag + 1
+        #elif self.flag != 2:
+        #    messagebox.showinfo("message","you can't select this mode now")
+        #elif self.mode_select == '2':
+        #    self.vmbprocess = Process(target=vm.main,args=('b',self.vm_value,self.mode_select,0))
+        #    self.vmbprocess.start()
     def button5_clicked(self):
-        vm.main('t',self)
+        vm.main('t',self.vm_value,self.mode_select,self)
         messagebox.showinfo("message","code.txt is translated into inv_code.txt")
     def button6_clicked(self):
         self.text.delete('1.0','end')
@@ -185,14 +217,49 @@ class MainFrame(tk.Frame):
         else:
             messagebox.showinfo("message","you can't select this mode")
     def button9_clicked(self):
-        if self.flag > 2:
-            self.flag = 1
-            self.label_text.delete('1.0','end')
-            self.value_text.delete('1.0','end')
-            self.text.delete('1.0','end')
-        else:
-            messagebox.showinfo("message","you can't select this mode now")
-
+        #if self.flag > 2:
+        self.flag = 1
+        self.label_text.delete('1.0','end')
+        self.value_text.delete('1.0','end')
+        self.text.delete('1.0','end')
+        #else:
+        #    messagebox.showinfo("message","you can't select this mode now")
+    def button10_clicked(self):
+        self.vm_value.value = 1
+        sleep(0.1)
+        with open("stdcash.txt",'r') as f:
+            self.buf = f.read()
+        sys.stdout = self.write(self.buf)
+        with open("labelcash.txt",'r') as f:
+            self.buf = f.read()
+        sys.stdout = self.lwrite(self.buf)
+        with open("valuecash.txt",'r') as f:
+            self.buf = f.read()
+        sys.stdout = self.rwrite(self.buf)
+    def button11_clicked(self):
+        self.vm_value.value = 2
+        sleep(0.1)
+        with open("stdcash.txt",'r') as f:
+            self.buf = f.read()
+        sys.stdout = self.write(self.buf)
+        with open("labelcash.txt",'r') as f:
+            self.buf = f.read()
+        sys.stdout = self.lwrite(self.buf)
+        with open("valuecash.txt",'r') as f:
+            self.buf = f.read()
+        sys.stdout = self.rwrite(self.buf)
+    def button12_clicked(self):
+        self.vm_value.value = 3
+        sleep(0.1)
+        with open("stdcash.txt",'r') as f:
+            self.buf = f.read()
+        sys.stdout = self.write(self.buf)
+    def button13_clicked(self):
+        self.mode_select = '1'
+        messagebox.showinfo("message","set up auto mode")
+    def button14_clicked(self):
+        self.mode_select = '2'
+        messagebox.showinfo("messagebox","set up step mode")
     #class IORedirector(object):
     #    def __init__(self, text_area):
     #        self.text_area = text_area
@@ -273,4 +340,5 @@ if __name__ == '__main__':
     app = MainFrame(master=root)
     sys.stdout = sys.__stdout__
     app.mainloop()
-    #app.__del__()
+    if app.mode_select == '2':
+        app.delete()
