@@ -64,6 +64,18 @@ class MainFrame(tk.Frame):
         self.label_text = tk.Text(self.main_frm,height=30, width=4)
         self.rtext_label = ttk.Label(self.main_frm,text="value stack",font=self.font2)
         self.value_text = tk.Text(self.main_frm,height=30, width=4)
+        #create code.txt and inv_code.txt window
+        self.window2 = []
+        self.user2 = []
+        self.code_box = ttk.Entry(self.main_frm)
+        self.code_btn = ttk.Button(self.main_frm, text="code.txt",command=self.button7_clicked)
+        self.window3 = []
+        self.user3 = []
+        self.icode_box = ttk.Entry(self.main_frm)
+        self.icode_btn = ttk.Button(self.main_frm, text="inv_code.txt",command=self.button8_clicked)
+        #create again btn
+        self.again_box = ttk.Entry(self.main_frm)
+        self.again_btn = ttk.Button(self.main_frm, text="execute again",command=self.button9_clicked)
 
 
         # ウィジェットの配置
@@ -74,9 +86,12 @@ class MainFrame(tk.Frame):
         self.bapp_btn.grid(column=2, row=2)
         self.tapp_btn.grid(column=3, row=1)
         self.std_btn.grid(column=4, row=1)
+        self.code_btn.grid(column=5,row=1)
         self.mode_label.grid(column=1, row=1,pady=10)
         self.text.grid(column=0, row=10)
         self.clear_btn.grid(column=3, row=2)
+        self.again_btn.grid(column=4,row=2)
+        self.icode_btn.grid(column=5,row=2)
         self.text_label.grid(column=0,row=2, pady=19)
         self.ltext_label.grid(column=1,row=9)
         self.label_text.grid(column=1,row=10)
@@ -132,7 +147,7 @@ class MainFrame(tk.Frame):
             messagebox.showinfo("message","you've already selected a stack machine code")
         
     def button2_clicked(self):
-        #vmprocess = Process(target=vm.main,args=('f',self))
+        #vmprocess = Process(target=vm.main,args=('f'))
         #vmprocess.start()
         #process_create(self.frame)
         if self.flag == 1:
@@ -157,6 +172,26 @@ class MainFrame(tk.Frame):
         messagebox.showinfo("message","code.txt is translated into inv_code.txt")
     def button6_clicked(self):
         self.text.delete('1.0','end')
+    def button7_clicked(self):
+        if self.flag != 0 or self.flag != 1:
+            self.window2.append(tk.Toplevel())
+            self.user2.append(User2(self.window2[len(self.window2)-1],len(self.window2)))
+        else:
+            messagebox.showinfo("message","you can't select this mode")
+    def button8_clicked(self):
+        if self.flag != 0 or self.flag != 1:
+            self.window3.append(tk.Toplevel())
+            self.user3.append(User3(self.window3[len(self.window3)-1],len(self.window3)))
+        else:
+            messagebox.showinfo("message","you can't select this mode")
+    def button9_clicked(self):
+        if self.flag > 2:
+            self.flag = 1
+            self.label_text.delete('1.0','end')
+            self.value_text.delete('1.0','end')
+            self.text.delete('1.0','end')
+        else:
+            messagebox.showinfo("message","you can't select this mode now")
 
     #class IORedirector(object):
     #    def __init__(self, text_area):
@@ -187,6 +222,39 @@ class User(tk.Frame):
         text.insert(tk.END, buf)
         f.close()
 
+class User2(tk.Frame):
+    def __init__(self,master,num):
+        super().__init__(master)
+        f = open("code.txt",'r')
+        buf=f.read()
+        self.pack()
+        master.geometry("100x800")
+        master.title("code.txt")
+        scroll = tk.Scrollbar(master)
+        text = tk.Text(master,height=4,width=50)
+        scroll.pack(side=tk.RIGHT, fill=tk.Y)
+        text.pack(side=tk.LEFT,fill=tk.Y)
+        scroll.config(command=text.yview)
+        text.config(yscrollcommand=scroll.set)
+        text.insert(tk.END, buf)
+        f.close()
+
+class User3(tk.Frame):
+    def __init__(self,master,num):
+        super().__init__(master)
+        f = open("inv_code.txt",'r')
+        buf=f.read()
+        self.pack()
+        master.geometry("100x800")
+        master.title("inv_code.txt")
+        scroll = tk.Scrollbar(master)
+        text = tk.Text(master,height=4,width=50)
+        scroll.pack(side=tk.RIGHT, fill=tk.Y)
+        text.pack(side=tk.LEFT,fill=tk.Y)
+        scroll.config(command=text.yview)
+        text.config(yscrollcommand=scroll.set)
+        text.insert(tk.END, buf)
+        f.close()
 #def process_create(frame):
 #    vmprocess = Process(target=vm.main,args=('f',frame))
 #    vmprocess.start()
