@@ -18,7 +18,7 @@ class MainFrame(tk.Frame):
         self.mode_select = '0'
         self.grid()
         self.master.title("virtual machine")
-        self.master.geometry("1020x740")
+        self.master.geometry("1120x740")
 
         self.main_frm = ttk.Frame(self.master)
         self.main_frm.grid(column=0,row=0,sticky=tk.NSEW, padx=5,pady=10)
@@ -31,16 +31,12 @@ class MainFrame(tk.Frame):
         self.file1 = tk.StringVar()
         self.font1 = font.Font(family='Helvetica',size=20,weight='bold')
         self.font2 = font.Font(family='Helvetica',size=10,weight='bold')
-        # ウィジェット作成（フォルダパス）
+        # create widget（folder path）
         self.folder_label = ttk.Label(self.main_frm, text="select stack machine code",font=self.font2)
         self.folder_box = ttk.Entry(self.main_frm,textvariable=self.file1)
         self.folder_btn = ttk.Button(self.main_frm,text="1.reference",command=self.button1_clicked)
-        # ウィジェット作成（並び順）
-        self.order_label = ttk.Label(self.main_frm, text="並び順")
-        self.order_comb = ttk.Combobox(self.main_frm, values=["昇順", "降順"], width=10)
-        self.order_comb.current(0)
         self.filename=tk.StringVar()
-        # ウィジェット作成（実行ボタン)
+        # create widget（execute button)
         self.fapp_box = ttk.Entry(self.main_frm,textvariable=self.filename)
         self.fapp_btn = ttk.Button(self.main_frm, text="2.forward",command=self.button2_clicked)
         self.bapp_box = ttk.Entry(self.main_frm,textvariable=self.filename)
@@ -62,9 +58,9 @@ class MainFrame(tk.Frame):
         self.mode_label = ttk.Label(self.main_frm, text="select mode",font=self.font2)
         # create stack text window
         self.fonts = font.Font(family='Helvetica',size=20,weight='bold')
-        self.ltext_label = ttk.Label(self.main_frm, text="label stack",font=self.font2)
+        self.ltext_label = ttk.Label(self.main_frm, text="label stack\n(program counter, process number)",font=self.font2)
         self.label_text = tk.Text(self.main_frm,height=30, width=4)
-        self.rtext_label = ttk.Label(self.main_frm,text="value stack",font=self.font2)
+        self.rtext_label = ttk.Label(self.main_frm,text="value stack\n(variable's value, process number)",font=self.font2)
         self.value_text = tk.Text(self.main_frm,height=30, width=4)
         #create code.txt and inv_code.txt window
         self.window2 = []
@@ -91,8 +87,11 @@ class MainFrame(tk.Frame):
         self.select_mode_box = ttk.Entry(self.main_frm)
         self.select_mode_btn = ttk.Button(self.main_frm, text="step mode", command=self.button14_clicked)
         self.asmode_label = ttk.Label(self.main_frm, text="select auto or step mode",font=self.font2)
+        #create explain part
+        self.exp_label = ttk.Label(self.main_frm, text="(program counter, process number)")
+        self.exp2_label = ttk.Label(self.main_frm, text="(variable's value, process number")
         
-        # ウィジェットの配置
+        # array widget
         self.asmode_label.grid(column=1,row=0,pady=10)
         self.auto_mode_btn.grid(column=2,row=0)
         self.select_mode_btn.grid(column=3,row=0)

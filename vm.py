@@ -20,18 +20,17 @@ count_pc=0
 parflag=0
 args=sys.argv
 
-#push:スタックトップに値を積む
+#push
 def push(a,stack,top):
     stack.append(a)
     return top+1
 
-#pop1:スタックトップから値をポップする
+#pop1
 def pop1(stack,top):
     t=stack[top-1]
     stack.pop()
     return (t,top-1)
 
-#命令，被演算子の組を一つ受け取り実行する
 def executedcommand(stack,rstack,lstack,com,opr,pc,pre,top,rtop,ltop,address,value,parpath,tablecount,fbtmode):
     if com==1:#push
         top=push(opr,stack,top)
@@ -130,14 +129,12 @@ def executedcommand(stack,rstack,lstack,com,opr,pc,pre,top,rtop,ltop,address,val
         pre=pc
         return (pc+1,pre,stack,top,rtop,tablecount)
 
-#コードの実行
 def execution(mode,lock,mlock,command,opr,start,end,stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag,parpath,fbtmode,count_pc):
     pc=start
     pre=pc
     top=len(stack)
     if fbtmode=='f':
         while pc<end:
-            #現在のプロセスに鍵がかかっているか確認
             if parpath!=0:
                lock.acquire()
             if fbtmode!='q':
@@ -177,22 +174,22 @@ def execution(mode,lock,mlock,command,opr,start,end,stack,address,value,tablecou
                         with open("stdcash.txt",'a') as f:
                             f.write("~~~~~~~~Process"+str(parpath)+" execute~~~~~~~~\n")
                             f.write("pc = "+str(pc+1)+"   command = "+command1+"   operand = "+str(opr[pc])+"\n")                            
-            #コマンドを実行する関数に処理を渡す
+
             (pc,pre,stack,top,rtop,tablecount)=executedcommand(stack,rstack,lstack,command[pc],opr[pc],pc,pre,top,rtop,ltop,address,value,parpath,tablecount,fbtmode)
             if fbtmode!='q':
                 print("executing stack:       "+str(stack[:])+"")
                 print("shared variable stack: "+str(value[0:tablecount.value])+"")
                 with open("stdout.txt",mode='a') as f:
-                    f.write("executing stack:       "+str(stack[:])+"\n")
+                    f.write("executing stack:       "+str(stack[3:])+"\n")
                     f.write("shared variable stack: "+str(value[0:tablecount.value])+"\n\n")
                 if mode == '2':
                     if parpath != 0:
                         with open("stdcash.txt",mode='a') as f:
-                            f.write("executing stack:       "+str(stack[:])+"\n")
+                            f.write("executing stack:       "+str(stack[3:])+"\n")
                             f.write("shared variable stack: "+str(value[0:tablecount.value])+"\n\n")
                     elif parpath == 0:
                         with open("stdcash.txt",'a') as f:
-                            f.write("executing stack:       "+str(stack[:])+"\n")
+                            f.write("executing stack:       "+str(stack[3:])+"\n")
                             f.write("shared variable stack: "+str(value[0:tablecount.value])+"\n\n")
                     if command[pre] == 7:
                         with open("labelcash.txt",mode='w') as f:
@@ -215,8 +212,6 @@ def execution(mode,lock,mlock,command,opr,start,end,stack,address,value,tablecou
                             with open("valuecash.txt",'a') as f:
                                 f.write(""+str(rstack[rtop.value-2])+" "+str(rstack[rtop.value-1])+"\n")
                 #if parpath != 0:
-                #    queue.put("~~~~~~~~Process"+str(parpath)+" execute~~~~~~~~\npc = "+str(pre+1)+"   command = "+command1+"   operand = "+str(opr[pre])+"\nexecuting stack:       "+str(stack[:])+"\nshared variable stack: "+str(value[0:tablecount.value])+"")
-            #表示モードによってプロセスの鍵の管理の仕方が違う
             if parpath!=0:
                 if mode=='2':
                     lock.acquire(False)
@@ -264,7 +259,6 @@ def execution(mode,lock,mlock,command,opr,start,end,stack,address,value,tablecou
         endflag.value=1
     return stack        
 
-#実行コード読み取り
 def coderead(start,end,com,opr,count_pc,parflag,fbtmode):
     if fbtmode=='f' or fbtmode=='t':
         f=open("code.txt",mode='r')
@@ -277,7 +271,6 @@ def coderead(start,end,com,opr,count_pc,parflag,fbtmode):
         s1=re.search(r'\d+',t1)
         t2=codes[i+2:i+8]
         s2=re.search(r'\d+',t2)
-        #comに命令oprに被演算子を格納
         com.append((int)(s1.group()))
         opr.append((int)(s2.group()))
         if ((int)(s1.group())==10 and (int)(s2.group())==0):
@@ -289,7 +282,7 @@ def coderead(start,end,com,opr,count_pc,parflag,fbtmode):
     return (start,end,com,opr,count_pc,parflag)
     
 
-#backward前処理
+#pre backward
 def backward(fbtmode):
     global ldata
     global rdata
@@ -311,7 +304,6 @@ def backward(fbtmode):
         f5.close()
         f7.close()
 
-#スタックとinvertedcodeの出力
 def forward(ltop,rtop,fbtmode,value,lstack,rstack,count_pc,com,opr):
     if fbtmode=='t':
         f2=open("inv_code.txt",mode='w')
@@ -393,17 +385,6 @@ def main(fbtmode,vm_value,mode_select,self):
     tabledata=f.read()
     f.close()
     k=0
-    #sys.stdout = self.write("main exec")
-    #変数名と変数の値との関係を保存するための機能現在の処理には必要ない将来用
-    #for i in range(0,len(tabledata),20):
-    #    t=tabledata[i+11:i+13]
-    #    s=re.search(r'\d+',t)
-    #    address[k]=((int)(s.group()))
-    #    t2=tabledata[i+13:i+19]
-    #    s2=re.search(r'\d+',t2)
-    #    value[k]=((int)(s2.group()))
-    #    k=k+1
-    #    tablecount=tablecount+1
 
     backward(fbtmode)
 
@@ -424,23 +405,23 @@ def main(fbtmode,vm_value,mode_select,self):
             else:
                 #mode=input('mode   1:auto 2:select >> ')
                 mode= mode_select
-            #逐次実行の部分を実行
+            #exec initial part
             stack=execution(mode,lockfree,lockfree,com,opr,0,start[0],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc)
             if mode=='2':
                 for i in range(0,parflag,1):
                     lock[i].acquire()
                 process={}
-                #並列プロセスの生成
+                #generate parallel process
                 for i in range(0,parflag,1):        
                     process[i]=Process(target=execution,args=(mode,lock[i],mlock,com,opr,start[i],end[i],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag[i],i+1,fbtmode,count_pc))
             if mode=='1':
                 process={}
-                #並列プロセスの生成
+                #generate parallel process
                 for i in range(0,parflag,1):        
                     process[i]=Process(target=execution,args=(mode,lock[0],mlock,com,opr,start[i],end[i],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag[i],i+1,fbtmode,count_pc))
             for i in range(0,parflag,1):
                     process[i].start()
-            #モニター: メインプロセスでサブプロセスの実行を管理する
+            #monitor
             if mode=='2':
                 while a!=3:
                     vm_value.value = 0
@@ -526,7 +507,7 @@ def main(fbtmode,vm_value,mode_select,self):
                 lock[i].acquire()
             process={}
             execution(mode,lockfree,lockfree,com,opr,0,end[0],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc)
-            #並列プロセスの生成
+            #generate process
             for i in range(0,parflag,1):
                 process[i]=Process(target=execution,args=(mode,lock[parflag-i-1],mlock,com,opr,end[i],start[i],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag[i],parflag-i,fbtmode,count_pc))
             for i in range(0,parflag,1):
@@ -555,7 +536,7 @@ def main(fbtmode,vm_value,mode_select,self):
                         a='esc'
             for i in range(0,parflag,1):
                 process[i].join()
-            #逐次実行の部分を実行
+            #exec final part
             execution(mode,lockfree,lockfree,com,opr,start[parflag-1]+1,count_pc,stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc)
         
             with open("stdout.txt",'r') as f:
@@ -566,6 +547,5 @@ def main(fbtmode,vm_value,mode_select,self):
     elif fbtmode=='t':
         (start,end,com,opr,count_pc,parflag)=coderead(start,end,com,opr,count_pc,parflag,fbtmode)
         forward(ltop.value,rtop.value,fbtmode,value,lstack,rstack,count_pc,com,opr)
-    #経過時間の表示
     elapsed_time = time.time()-start_time
     print("elapsed_time:{0}".format(elapsed_time) + "[sec]")
