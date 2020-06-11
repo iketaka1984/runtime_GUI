@@ -243,16 +243,26 @@ def execution(mode,lock,mlock,command,opr,start,end,stack,address,value,tablecou
                 print("pc = "+str(pc+1)+"   command = "+command1+"   operand = "+str(opr[pc])+"")
                 with open("stdout.txt",mode='a') as f:
                     f.write("~~~~~~~~Process"+str(parpath)+" execute~~~~~~~~\n")
-                    f.write("pc = "+str(pc+1)+"   command = "+command1+"   operand = "+str(opr[pc])+"\n")
+                    f.write("pc = "+str(pc+1)+" (forward pc = "+str(count_pc-pc)+") \ncommand = "+command1+"   operand = "+str(opr[pc])+"\n")
                 if mode == '2':
-                    with open("stdcash.txt","w") as f:
-                        f.write("~~~~~~~~Process"+str(parpath)+" execute~~~~~~~~\n")
-                        f.write("pc = "+str(pc+1)+"   command = "+command1+"   operand = "+str(opr[pc])+"\n")
+                    if parpath != 0:
+                        with open("stdcash.txt",'w') as f:
+                            f.write("")
+                        with open("stdcash.txt","a") as f:
+                            f.write("~~~~~~~~Process"+str(parpath)+" execute~~~~~~~~\n")
+                            f.write("pc = "+str(pc+1)+" (forward pc = "+str(count_pc-pc)+") \ncommand = "+command1+"   operand = "+str(opr[pc])+"\n")
+                    elif parpath == 0:
+                        with open("stdcash.txt",'a') as f:
+                            f.write("~~~~~~~~Process"+str(parpath)+" execute~~~~~~~~\n")
+                            f.write("pc = "+str(pc+1)+" (forward pc = "+str(count_pc-pc)+") \ncommand = "+command1+"   operand = "+str(opr[pc])+"\n")
             (pc,pre,stack,top,rtop,tablecount)=executedcommand(stack,rstack,lstack,command[pc],opr[pc],pc,pre,top,rtop,ltop,address,value,parpath,tablecount,fbtmode)
             if fbtmode!='q':
                 print("shared variable stack: "+str(value[0:tablecount.value])+"")
                 with open("stdout.txt",mode='a') as f:
                     f.write("shared variable stack: "+str(value[0:tablecount.value])+"\n\n")
+                if mode == '2':
+                    with open("stdcash.txt",'a') as f:
+                        f.write("shared variable stack: "+str(value[0:tablecount.value])+"\n\n")
             if parpath!=0:
                 lock.acquire(False)
                 mlock.release()
@@ -438,6 +448,7 @@ def main(fbtmode,vm_value,mode_select,self):
                             #if not queue.empty():
                             #    data = queue.get(False)
                             #    sys.stdout = self.write(data)
+                    #must extend 
                     if endflag[0].value == 1 or endflag[1].value ==1:
                         with open("labelcash.txt",'w') as f:
                             f.write("")
@@ -502,24 +513,33 @@ def main(fbtmode,vm_value,mode_select,self):
                 mode='1'
             else:
                 #mode=input('mode   1:auto  2:select >> ')
-                mode='1'
+                mode=mode_select
             for i in range(0,parflag,1):
                 lock[i].acquire()
             process={}
             execution(mode,lockfree,lockfree,com,opr,0,end[0],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc)
             #generate process
+            with open("stdcash.txt","w") as f:
+                f.write("")
             for i in range(0,parflag,1):
                 process[i]=Process(target=execution,args=(mode,lock[parflag-i-1],mlock,com,opr,end[i],start[i],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag[i],parflag-i,fbtmode,count_pc))
             for i in range(0,parflag,1):
                 process[i].start()
             a='2'
             if mode=='2':
-                while a!='esc':
-                    a=input('process '+str(lstack[ltop.value])+' ')
+                while a!=3:
+                    #a=input('process '+str(lstack[ltop.value])+' ')
+                    vm_value.value = 0
+                    while vm_value.value == 0:
+                        i = 0
+                    a = vm_value.value
                     mlock.acquire(False)
                     for i in range(0,parflag,1):
                         if int(lstack[ltop.value])==i+1:
                             lock[i].release()
+                    if endflag[0].value == 1 and endflag[1].value == 1:
+                        with open("stdcash.txt",'w') as f:
+                            f.write("")
             elif mode=='1':
                 while a!='esc':
                     mlock.acquire()
@@ -537,11 +557,14 @@ def main(fbtmode,vm_value,mode_select,self):
             for i in range(0,parflag,1):
                 process[i].join()
             #exec final part
+            with open("stdcash.txt",'w') as f:
+                f.write("")
             execution(mode,lockfree,lockfree,com,opr,start[parflag-1]+1,count_pc,stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc)
-        
-            with open("stdout.txt",'r') as f:
-                buf = f.read()
-                sys.stdout = self.write(buf)
+
+            if mode == '1':
+                with open("stdout.txt",'r') as f:
+                    buf = f.read()
+                    sys.stdout = self.write(buf)
         elif parflag==0:
             execution(mode,lockfree,lockfree,com,opr,0,len(com),stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc)
     elif fbtmode=='t':

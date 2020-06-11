@@ -7,6 +7,7 @@ from tkinter import messagebox
 from tkinter import font
 import os
 import sys
+import re
 from time import sleep
 import vm
 
@@ -188,10 +189,19 @@ class MainFrame(tk.Frame):
             self.user.append(User(self.window[len(self.window)-1],len(self.window)))
         else:
             messagebox.showinfo("message","you can't select this mode")
+
     def button4_clicked(self):
         #if self.mode_select == '1':
         #if self.flag == 2:
-        vm.main('b',self.vm_value,self.mode_select,self)
+        if self.mode_select == '1':
+            vm.main('b',self.vm_value,self.mode_select,self)
+        elif self.mode_select == '2':
+            self.vmprocess = Process(target=vm.main,args=('b',self.vm_value,self.mode_select,0))
+            self.vmprocess.start()
+            sleep(0.3)
+            with open("stdout.txt",'r') as f:
+                self.buf = f.read() 
+            sys.stdout = self.write(self.buf)
         #    self.flag = self.flag + 1
         #elif self.flag != 2:
         #    messagebox.showinfo("message","you can't select this mode now")
@@ -293,8 +303,41 @@ class User2(tk.Frame):
         super().__init__(master)
         f = open("code.txt",'r')
         buf=f.read()
+        self.com = []
+        self.opr = []
+        self.renamed_com = {}
+        count_pc=0
+        for i in range(0,len(buf),9):
+            t1=buf[i:i+2]
+            s1=re.search(r'\d+',t1)
+            t2=buf[i+2:i+8]
+            s2=re.search(r'\d+',t2)
+            self.com.append((int)(s1.group()))
+            self.opr.append((int)(s2.group()))
+            count_pc= count_pc+1
+        for i in range(0,count_pc,1):
+            if self.com[i]==1:
+                self.renamed_com[i]="ipush"
+            elif self.com[i]==2:
+                self.renamed_com[i]=" load"
+            elif self.com[i]==3:
+                self.renamed_com[i]="store"
+            elif self.com[i]==4:
+                self.renamed_com[i]="  jpc"
+            elif self.com[i]==5:
+                self.renamed_com[i]="  jmp"
+            elif self.com[i]==6:
+                self.renamed_com[i]="   op"
+            elif self.com[i]==7:
+                self.renamed_com[i]="label"
+            elif self.com[i]==10:
+                self.renamed_com[i]="  par"
+            elif self.com[i]==11:
+                self.renamed_com[i]="alloc"
+            elif self.com[i]==12:
+                self.renamed_com[i]=" free"
         self.pack()
-        master.geometry("100x800")
+        master.geometry("200x800")
         master.title("code.txt")
         scroll = tk.Scrollbar(master)
         text = tk.Text(master,height=4,width=50)
@@ -302,7 +345,10 @@ class User2(tk.Frame):
         text.pack(side=tk.LEFT,fill=tk.Y)
         scroll.config(command=text.yview)
         text.config(yscrollcommand=scroll.set)
-        text.insert(tk.END, buf)
+        for i in range(0,count_pc,1):
+            text.insert(tk.INSERT, "<"+str(i+1).rjust(3)+">")
+            text.insert(tk.INSERT, "  "+self.renamed_com[i]+" ")
+            text.insert(tk.INSERT, " "+str(self.opr[i]).rjust(3)+"\n")
         f.close()
 
 class User3(tk.Frame):
@@ -310,8 +356,35 @@ class User3(tk.Frame):
         super().__init__(master)
         f = open("inv_code.txt",'r')
         buf=f.read()
+        self.com2 = []
+        self.opr2 = []
+        self.renamed_com2 = {}
+        count_pc=0
+        for i in range(0,len(buf),9):
+            t1=buf[i:i+2]
+            s1=re.search(r'\d+',t1)
+            t2=buf[i+2:i+8]
+            s2=re.search(r'\d+',t2)
+            self.com2.append((int)(s1.group()))
+            self.opr2.append((int)(s2.group()))
+            count_pc= count_pc+1
+        for i in range(0,count_pc,1):
+            if self.com2[i]==0:
+                self.renamed_com2[i]="    nop"
+            elif self.com2[i]==7:
+                self.renamed_com2[i]="  label"
+            elif self.com2[i]==8:
+                self.renamed_com2[i]="   rjmp"
+            elif self.com2[i]==9:
+                self.renamed_com2[i]="restore"
+            elif self.com2[i]==10:
+                self.renamed_com2[i]="    par"
+            elif self.com2[i]==11:
+                self.renamed_com2[i]="  alloc"
+            elif self.com2[i]==12:
+                self.renamed_com2[i]="   free"
         self.pack()
-        master.geometry("100x800")
+        master.geometry("200x800")
         master.title("inv_code.txt")
         scroll = tk.Scrollbar(master)
         text = tk.Text(master,height=4,width=50)
@@ -319,7 +392,10 @@ class User3(tk.Frame):
         text.pack(side=tk.LEFT,fill=tk.Y)
         scroll.config(command=text.yview)
         text.config(yscrollcommand=scroll.set)
-        text.insert(tk.END, buf)
+        for i in range(0,count_pc,1):
+            text.insert(tk.INSERT, "<"+str(i+1).rjust(3)+">")
+            text.insert(tk.INSERT, "  "+self.renamed_com2[i]+"")
+            text.insert(tk.INSERT, "  "+str(self.opr2[i]).rjust(3)+"\n")
         f.close()
 #def process_create(frame):
 #    vmprocess = Process(target=vm.main,args=('f',frame))
