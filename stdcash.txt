@@ -1,0 +1,45 @@
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 56 (forward pc = 9) 
+command = restore   operand = 2
+shared variable stack: [3, 1, 0]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 57 (forward pc = 8) 
+command =     nop   operand = 0
+shared variable stack: [3, 1, 0]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 58 (forward pc = 7) 
+command = restore   operand = 1
+shared variable stack: [3, 0, 0]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 59 (forward pc = 6) 
+command =     nop   operand = 0
+shared variable stack: [3, 0, 0]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 60 (forward pc = 5) 
+command = restore   operand = 0
+shared variable stack: [-1, 0, 0]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 61 (forward pc = 4) 
+command =     nop   operand = 0
+shared variable stack: [-1, 0, 0]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 62 (forward pc = 3) 
+command =    free   operand = 2
+shared variable stack: [-1, 0]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 63 (forward pc = 2) 
+command =    free   operand = 1
+shared variable stack: [-1]
+
+~~~~~~~~Process0 execute~~~~~~~~
+pc = 64 (forward pc = 1) 
+command =    free   operand = 0
+shared variable stack: []
+
