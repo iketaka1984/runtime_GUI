@@ -19,11 +19,20 @@ class MainFrame(tk.Frame):
         self.mode_select = '0'
         self.grid()
         self.master.title("virtual machine")
-        self.master.geometry("1120x740")
+        self.master.geometry("1900x1000")
 
         self.main_frm = ttk.Frame(self.master)
         self.main_frm.grid(column=0,row=0,sticky=tk.NSEW, padx=5,pady=10)
-
+        self.main_frm2 = ttk.Frame(self.main_frm,width=1900,height=500)
+        self.main_frm2.grid(column=0,row=0,sticky=tk.NSEW,padx=5,pady=10)
+        self.txt_frm = ttk.Frame(self.main_frm)
+        self.txt_frm.grid(column=0,row=1,sticky=tk.NSEW,padx=5,pady=10)
+        self.label_frm = ttk.Frame(self.main_frm)
+        self.label_frm.grid(column=1,row=1,sticky=tk.NSEW,padx=5,pady=10)
+        self.value_frm = ttk.Frame(self.main_frm)
+        self.value_frm.grid(column=2,row=1,sticky=tk.NSEW,padx=5,pady=10)
+        self.region_frm = ttk.Frame(self.main_frm)
+        self.region_frm.grid(column=3,row=1,sticky=tk.NSEW,padx=5,pady=19)
         #self.frame = tk.Toplevel()
         #self.frame.title("subframe1")
         #self.frame.geometry("500x120")
@@ -31,66 +40,71 @@ class MainFrame(tk.Frame):
 
         self.file1 = tk.StringVar()
         self.font1 = font.Font(family='Helvetica',size=20,weight='bold')
-        self.font2 = font.Font(family='Helvetica',size=10,weight='bold')
+        self.font2 = font.Font(family='Helvetica',size=20,weight='normal')
         # create widget（folder path）
-        self.folder_label = ttk.Label(self.main_frm, text="select stack machine code",font=self.font2)
-        self.folder_box = ttk.Entry(self.main_frm,textvariable=self.file1)
-        self.folder_btn = ttk.Button(self.main_frm,text="1.reference",command=self.button1_clicked)
+        self.folder_label = ttk.Label(self.main_frm2, text="select stack machine code",font=self.font2)
+        self.folder_box = ttk.Entry(self.main_frm2,textvariable=self.file1)
+        self.folder_btn = tk.Button(self.main_frm2,text="1.reference",font=("Helvetica",15),command=self.button1_clicked)
         self.filename=tk.StringVar()
         # create widget（execute button)
-        self.fapp_box = ttk.Entry(self.main_frm,textvariable=self.filename)
-        self.fapp_btn = ttk.Button(self.main_frm, text="2.forward",command=self.button2_clicked)
-        self.bapp_box = ttk.Entry(self.main_frm,textvariable=self.filename)
-        self.bapp_btn = ttk.Button(self.main_frm, text="5.backward",command=self.button4_clicked)
-        self.tapp_box = ttk.Entry(self.main_frm,textvariable=self.filename)
-        self.tapp_btn = ttk.Button(self.main_frm, text="3.translate",command=self.button5_clicked)
+        self.fapp_box = ttk.Entry(self.main_frm2,textvariable=self.filename)
+        self.fapp_btn = tk.Button(self.main_frm2, text="2.forward",font=("Helvetica",15),command=self.button2_clicked)
+        self.bapp_box = ttk.Entry(self.main_frm2,textvariable=self.filename)
+        self.bapp_btn = tk.Button(self.main_frm2, text="5.backward",font=("Helvetica",15),command=self.button4_clicked)
+        self.tapp_box = ttk.Entry(self.main_frm2,textvariable=self.filename)
+        self.tapp_btn = tk.Button(self.main_frm2, text="3.translate",font=("Helvetica",15),command=self.button5_clicked)
         # create widget (stdout)
         self.window = []
         self.user = []
-        self.std_box = ttk.Entry(self.main_frm)
-        self.std_btn = ttk.Button(self.main_frm, text="copy result",command=self.button3_clicked)
+        self.std_box = ttk.Entry(self.main_frm2)
+        self.std_btn = tk.Button(self.main_frm2, text="copy result",font=("Helvetica",15),command=self.button3_clicked)
         #crate clear wigdet
-        self.clear_out = ttk.Entry(self.main_frm)
-        self.clear_btn = ttk.Button(self.main_frm, text="4.clear", command=self.button6_clicked)
+        self.clear_out = ttk.Entry(self.main_frm2)
+        self.clear_btn = tk.Button(self.main_frm2, text="4.clear",font=("Helvetica",15), command=self.button6_clicked)
         # create text window
         #self.scroll = tk.Scrollbar(self.main_frm)
-        self.text_label = ttk.Label(self.main_frm, text="result of execution",font=self.font1)
-        self.text = tk.Text(self.main_frm,height=30,width=50)
-        self.mode_label = ttk.Label(self.main_frm, text="select mode",font=self.font2)
+        self.text_label = ttk.Label(self.txt_frm, text="result of execution",font=self.font1)
+        self.text = tk.Text(self.txt_frm,height=19,width=50,font=self.font1)
+        self.scrollbar = tk.Scrollbar(self.txt_frm,orient=tk.VERTICAL,command=self.text.yview)
+        self.mode_label = ttk.Label(self.main_frm2, text="select mode",font=self.font2)
         # create stack text window
         self.fonts = font.Font(family='Helvetica',size=20,weight='bold')
-        self.ltext_label = ttk.Label(self.main_frm, text="label stack\n(program counter, process number)",font=self.font2)
-        self.label_text = tk.Text(self.main_frm,height=30, width=4)
-        self.rtext_label = ttk.Label(self.main_frm,text="value stack\n(variable's value, process number)",font=self.font2)
-        self.value_text = tk.Text(self.main_frm,height=30, width=4)
+        self.ltext_label = ttk.Label(self.label_frm, text="label stack",font=self.font2) #\n(program counter, process number)
+        self.label_text = tk.Text(self.label_frm,height=20, width=4,font=self.font1)
+        self.lscrollbar = tk.Scrollbar(self.label_frm,orient=tk.VERTICAL,command=self.label_text.yview)
+        self.rtext_label = ttk.Label(self.value_frm,text="value stack",font=self.font2) #\n(variable's value, process number)
+        self.value_text = tk.Text(self.value_frm,height=20, width=5,font=self.font1)
+        self.rscrollbar = tk.Scrollbar(self.value_frm,orient=tk.VERTICAL,command=self.value_text.yview)
+        self.region_label = ttk.Label(self.region_frm,text="variable region",font=self.font2)
+        self.region_text = tk.Text(self.region_frm,height=10,width=10,font=self.font1)
         #create code.txt and inv_code.txt window
         self.window2 = []
         self.user2 = []
-        self.code_box = ttk.Entry(self.main_frm)
-        self.code_btn = ttk.Button(self.main_frm, text="code.txt",command=self.button7_clicked)
+        self.code_box = ttk.Entry(self.main_frm2)
+        self.code_btn = tk.Button(self.main_frm2, text="code.txt",font=("Helvetica",15),command=self.button7_clicked)
         self.window3 = []
         self.user3 = []
-        self.icode_box = ttk.Entry(self.main_frm)
-        self.icode_btn = ttk.Button(self.main_frm, text="inv_code.txt",command=self.button8_clicked)
+        self.icode_box = ttk.Entry(self.main_frm2)
+        self.icode_btn = tk.Button(self.main_frm2, text="inv_code.txt",font=("Helvetica",15),command=self.button8_clicked)
         #create again btn
-        self.again_box = ttk.Entry(self.main_frm)
-        self.again_btn = ttk.Button(self.main_frm, text="execute again",command=self.button9_clicked)
+        self.again_box = ttk.Entry(self.main_frm2)
+        self.again_btn = tk.Button(self.main_frm2, text="execute again",font=("Helvetica",15),command=self.button9_clicked)
         #create exec btn
-        self.exec_box = ttk.Entry(self.main_frm)
-        self.exec_btn = ttk.Button(self.main_frm, text="exec process 1", command=self.button10_clicked)
-        self.exec2_box = ttk.Entry(self.main_frm)
-        self.exec2_btn = ttk.Button(self.main_frm, text="exec process 2", command=self.button11_clicked)
-        self.exec3_box = ttk.Entry(self.main_frm)
-        self.exec3_btn = ttk.Button(self.main_frm, text="exec esc", command=self.button12_clicked)
+        self.exec_box = ttk.Entry(self.main_frm2)
+        self.exec_btn = tk.Button(self.main_frm2, text="exec process 1", font=("Helvetica",15),command=self.button10_clicked)
+        self.exec2_box = ttk.Entry(self.main_frm2)
+        self.exec2_btn = tk.Button(self.main_frm2, text="exec process 2",font=("Helvetica",15), command=self.button11_clicked)
+        self.exec3_box = ttk.Entry(self.main_frm2)
+        self.exec3_btn = tk.Button(self.main_frm2, text="exec esc",font=("Helvetica",15), command=self.button12_clicked)
         #create auto and select mode btn
-        self.auto_mode_box = ttk.Entry(self.main_frm)
-        self.auto_mode_btn = ttk.Button(self.main_frm, text="auto mode", command=self.button13_clicked)
-        self.select_mode_box = ttk.Entry(self.main_frm)
-        self.select_mode_btn = ttk.Button(self.main_frm, text="step mode", command=self.button14_clicked)
-        self.asmode_label = ttk.Label(self.main_frm, text="select auto or step mode",font=self.font2)
+        self.auto_mode_box = ttk.Entry(self.main_frm2)
+        self.auto_mode_btn = tk.Button(self.main_frm2, text="auto mode",font=("Helvetica",15), command=self.button13_clicked)
+        self.select_mode_box = ttk.Entry(self.main_frm2)
+        self.select_mode_btn = tk.Button(self.main_frm2, text="step mode",font=("Helvetica",15), command=self.button14_clicked)
+        self.asmode_label = ttk.Label(self.main_frm2, text="select auto or step mode",font=self.font2)
         #create explain part
-        self.exp_label = ttk.Label(self.main_frm, text="(program counter, process number)")
-        self.exp2_label = ttk.Label(self.main_frm, text="(variable's value, process number")
+        self.exp_label = ttk.Label(self.main_frm2, text="(program counter, process number)",font=self.font2)
+        self.exp2_label = ttk.Label(self.main_frm2, text="(variable's value, process number",font=self.font2)
         
         # array widget
         self.asmode_label.grid(column=1,row=0,pady=10)
@@ -105,19 +119,38 @@ class MainFrame(tk.Frame):
         self.std_btn.grid(column=4, row=2)
         self.code_btn.grid(column=5,row=2)
         self.mode_label.grid(column=1, row=2,pady=10)
-        self.text.grid(column=0, row=10)
         self.clear_btn.grid(column=3, row=3)
         self.again_btn.grid(column=4,row=3)
         self.icode_btn.grid(column=5,row=3)
         self.exec_btn.grid(column=3,row=4)
         self.exec2_btn.grid(column=4,row=4)
         self.exec3_btn.grid(column=5,row=4)
-        self.text_label.grid(column=0,row=9, pady=19)
-        self.ltext_label.grid(column=1,row=9)
-        self.label_text.grid(column=1,row=10)
-        self.rtext_label.grid(column=2,row=9)
-        self.value_text.grid(column=2,row=10)
 
+        #array text widget
+        self.text_label.grid(column=0,row=0, pady=19)
+        self.text.grid(row=1,column=0)
+        self.scrollbar.grid(row=1,column=1,sticky=(tk.N,tk.S))
+        self.text['yscrollcommand'] = self.scrollbar.set
+
+        #array label text widget
+        self.ltext_label.grid(column=0,row=0)
+        self.label_text.grid(column=0,row=1)
+        self.lscrollbar.grid(column=1,row=1,sticky=(tk.N,tk.S))
+        self.label_text['yscrollcommand'] = self.lscrollbar.set
+
+        #array value text widget
+        self.rtext_label.grid(column=0,row=0)
+        self.value_text.grid(column=0,row=1)
+        self.rscrollbar.grid(column=1,row=1,sticky=(tk.N,tk.S))
+        self.value_text['yscrollcommand'] = self.rscrollbar.set
+
+        #array region text widget
+        self.region_label.grid(column=0,row=0)
+        self.region_text.grid(column=0,row=1)
+
+        with open("variable_region.txt",'r') as f:
+            self.buf = f.read()
+        sys.stdout = self.region_write(self.buf)
     #    self.MainCounter = 0
     #    self.MainMsg = "main({}):{}".format(\
     #                         os.getpid(),self.MainCounter)
@@ -176,11 +209,17 @@ class MainFrame(tk.Frame):
             with open("valuecash.txt",'r') as f:
                 self.buf = f.read()
             sys.stdout = self.rwrite(self.buf)
+            with open("variable_region.txt",'r') as f:
+                self.buf = f.read()
+            sys.stdout = self.region_write(self.buf)
         elif self.mode_select == '1':
         #process_create(self.frame)
             if self.flag == 1:
                 vm.main('f',self.vm_value,self.mode_select,self)
                 self.flag = self.flag + 1
+                with open("variable_region.txt",'r') as f:
+                    self.buf = f.read()
+                sys.stdout = self.region_write(self.buf)
             elif self.flag != 1:
                 messagebox.showinfo("message","you can't select this mode now")
     def button3_clicked(self):
@@ -193,8 +232,13 @@ class MainFrame(tk.Frame):
     def button4_clicked(self):
         #if self.mode_select == '1':
         #if self.flag == 2:
+        self.flag = 2
         if self.mode_select == '1':
             vm.main('b',self.vm_value,self.mode_select,self)
+            sleep(0.3)
+            #with open("variable_region.txt",'r') as f:
+            #    self.buf = f.read()
+            #sys.stdout = self.region_write(self.buf)
         elif self.mode_select == '2':
             self.vmprocess = Process(target=vm.main,args=('b',self.vm_value,self.mode_select,0))
             self.vmprocess.start()
@@ -202,6 +246,10 @@ class MainFrame(tk.Frame):
             with open("stdout.txt",'r') as f:
                 self.buf = f.read() 
             sys.stdout = self.write(self.buf)
+        with open("variable_region.txt",'r') as f:
+            self.buf = f.read()
+        sys.stdout = self.region_write(self.buf)
+
         #    self.flag = self.flag + 1
         #elif self.flag != 2:
         #    messagebox.showinfo("message","you can't select this mode now")
@@ -245,6 +293,17 @@ class MainFrame(tk.Frame):
         with open("valuecash.txt",'r') as f:
             self.buf = f.read()
         sys.stdout = self.rwrite(self.buf)
+        if self.flag != 1:
+            self.label_text.delete("1.0","end")
+            with open("lstack.txt",'r') as f:
+                self.buf = f.read()
+            sys.stdout = self.lwrite(self.buf)
+        if self.flag != 1:
+            self.value_text.delete("1.0","end")
+            with open("rstack.txt",'r') as f:
+                self.buf = f.read()
+            sys.stdout = self.rwrite(self.buf)
+
     def button11_clicked(self):
         self.vm_value.value = 2
         sleep(0.1)
@@ -263,6 +322,14 @@ class MainFrame(tk.Frame):
         with open("stdcash.txt",'r') as f:
             self.buf = f.read()
         sys.stdout = self.write(self.buf)
+        with open("variable_region.txt",'r') as f:
+            self.buf = f.read()
+        sys.stdout = self.region_write(self.buf)
+        if self.flag != 1:
+            with open("rstack.txt",'r') as f:
+                self.buf = f.read()
+            self.value_text.delete("1.0","end")
+            sys.stdout = self.rwrite(self.buf)
     def button13_clicked(self):
         self.mode_select = '1'
         messagebox.showinfo("message","set up auto mode")
@@ -280,6 +347,9 @@ class MainFrame(tk.Frame):
         self.label_text.insert(tk.INSERT, st)
     def rwrite(self, st):
         self.value_text.insert(tk.INSERT, st)
+    def region_write(self,st):
+        self.region_text.delete('1.0','end')
+        self.region_text.insert(tk.INSERT,st)
 
 class User(tk.Frame):
     def __init__(self,master,num):
