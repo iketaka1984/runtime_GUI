@@ -82,7 +82,9 @@ class MainFrame(tk.Frame):
         self.value_text = tk.Text(self.value_frm,height=20, width=5,font=self.font1)
         self.rscrollbar = tk.Scrollbar(self.value_frm,orient=tk.VERTICAL,command=self.value_text.yview)
         self.region_label = ttk.Label(self.region_frm,text="variable region",font=self.font2)
-        self.region_text = tk.Text(self.region_frm,height=10,width=10,font=self.font1)
+        self.region_text = tk.Text(self.region_frm,height=3,width=10,font=self.font1)
+        self.variable_label = ttk.Label(self.region_frm,text="variable's value",font=self.font2)
+        self.variable_text = tk.Text(self.region_frm,height=3,width=10,font=self.font1)
         #create code.txt and inv_code.txt window
         self.window2 = []
         self.user2 = []
@@ -159,6 +161,8 @@ class MainFrame(tk.Frame):
         #array region text widget
         self.region_label.grid(column=0,row=0)
         self.region_text.grid(column=0,row=1)
+        self.variable_label.grid(column=0,row=2)
+        self.variable_text.grid(column=0,row=3)
 
         #array code text widget
         self.code_label.grid(column=0,row=0)
@@ -217,6 +221,46 @@ class MainFrame(tk.Frame):
             messagebox.showinfo("message","you've already selected a stack machine code")
         
     def button2_clicked(self):
+        self.code_text.delete("1.0","end")
+        with open("code.txt",'r') as f:
+            buf = f.read()
+        self.com = []
+        self.opr = []
+        self.renamed_com = {}
+        count_pc=0
+        for i in range(0,len(buf),9):
+            t1=buf[i:i+2]
+            s1=re.search(r'\d+',t1)
+            t2=buf[i+2:i+8]
+            s2=re.search(r'\d+',t2)
+            self.com.append((int)(s1.group()))
+            self.opr.append((int)(s2.group()))
+            count_pc= count_pc+1
+        for i in range(0,count_pc,1):
+            if self.com[i]==1:
+                self.renamed_com[i]="ipush"
+            elif self.com[i]==2:
+                self.renamed_com[i]="load"
+            elif self.com[i]==3:
+                self.renamed_com[i]="store"
+            elif self.com[i]==4:
+                self.renamed_com[i]="jpc"
+            elif self.com[i]==5:
+                self.renamed_com[i]="jmp"
+            elif self.com[i]==6:
+                self.renamed_com[i]="op"
+            elif self.com[i]==7:
+                self.renamed_com[i]="label"
+            elif self.com[i]==10:
+                self.renamed_com[i]="par"
+            elif self.com[i]==11:
+                self.renamed_com[i]="alloc"
+            elif self.com[i]==12:
+                self.renamed_com[i]="free"
+        for i in range(0,count_pc,1):
+            self.code_text.insert(tk.INSERT, "["+str(i+1).rjust(3)+"]")
+            self.code_text.insert(tk.INSERT, "  "+self.renamed_com[i].rjust(9)+" ")
+            self.code_text.insert(tk.INSERT, " "+str(self.opr[i]).rjust(7)+"\n")
         if self.mode_select == '2':
             self.vmprocess = Process(target=vm.main,args=('f',self.vm_value,self.mode_select,0,self.p1_pc,self.p2_pc))
             self.vmprocess.start()
@@ -234,6 +278,10 @@ class MainFrame(tk.Frame):
             self.code_text.insert(""+str(self.p1_pc.value)+".0","["+str(self.p1_pc.value).rjust(3)+"]",'r')
             self.code_text.delete(""+str(self.p2_pc.value)+".0",""+str(self.p2_pc.value)+".5")
             self.code_text.insert(""+str(self.p2_pc.value)+".0","["+str(self.p2_pc.value).rjust(3)+"]",'b')
+            with open("variables.txt",'r') as f:
+                buf = f.read()
+            self.variable_text.delete("1.0","end")
+            self.variable_text.insert(tk.INSERT,buf)
         elif self.mode_select == '1':
         #process_create(self.frame)
             if self.flag == 1:
@@ -254,6 +302,54 @@ class MainFrame(tk.Frame):
     def button4_clicked(self):
         #if self.mode_select == '1':
         #if self.flag == 2:
+        self.code_text.delete('1.0','end')
+        #self.window3.append(tk.Toplevel())
+        #self.user3.append(User3(self.window3[len(self.window3)-1],len(self.window3)))
+        with open("inv_code.txt",'r') as f:
+            buf = f.read()
+        self.com = []
+        self.opr = []
+        self.renamed_com = {}
+        count_pc=0
+        for i in range(0,len(buf),9):
+            t1=buf[i:i+2]
+            s1=re.search(r'\d+',t1)
+            t2=buf[i+2:i+8]
+            s2=re.search(r'\d+',t2)
+            self.com.append((int)(s1.group()))
+            self.opr.append((int)(s2.group()))
+            count_pc= count_pc+1
+        for i in range(0,count_pc,1):
+            if self.com[i]==1:
+                self.renamed_com[i]="ipush"
+            elif self.com[i]==2:
+                self.renamed_com[i]="load"
+            elif self.com[i]==3:
+                self.renamed_com[i]="store"
+            elif self.com[i]==4:
+                self.renamed_com[i]="jpc"
+            elif self.com[i]==5:
+                self.renamed_com[i]="jmp"
+            elif self.com[i]==6:
+                self.renamed_com[i]="op"
+            elif self.com[i]==7:
+                self.renamed_com[i]="label"
+            elif self.com[i]==8:
+                self.renamed_com[i]="rjmp"
+            elif self.com[i]==9:
+                self.renamed_com[i]="restore"
+            elif self.com[i]==10:
+                self.renamed_com[i]="par"
+            elif self.com[i]==11:
+                self.renamed_com[i]="alloc"
+            elif self.com[i]==12:
+                self.renamed_com[i]="free"
+            elif self.com[i]==0:
+                self.renamed_com[i]="nop"
+        for i in range(0,count_pc,1):
+            self.code_text.insert(tk.INSERT, "["+str(i+1).rjust(3)+"]")
+            self.code_text.insert(tk.INSERT, "  "+self.renamed_com[i].rjust(9)+" ")
+            self.code_text.insert(tk.INSERT, " "+str(self.opr[i]).rjust(7)+"\n")
         self.flag = 2
         if self.mode_select == '1':
             vm.main('b',self.vm_value,self.mode_select,self,self.p1_pc,self.p2_pc)
@@ -277,6 +373,10 @@ class MainFrame(tk.Frame):
         with open("variable_region.txt",'r') as f:
             self.buf = f.read()
         sys.stdout = self.region_write(self.buf)
+        with open("variables.txt",'r') as f:
+                buf = f.read()
+        self.variable_text.delete("1.0","end")
+        self.variable_text.insert(tk.INSERT,buf)
 
         #    self.flag = self.flag + 1
         #elif self.flag != 2:
@@ -293,6 +393,7 @@ class MainFrame(tk.Frame):
         if self.flag != 0 or self.flag != 1:
             #self.window2.append(tk.Toplevel())
             #self.user2.append(User2(self.window2[len(self.window2)-1],len(self.window2)))
+            self.code_text.delete("1.0","end")
             with open("code.txt",'r') as f:
                 buf = f.read()
             self.com = []
@@ -429,6 +530,10 @@ class MainFrame(tk.Frame):
             self.code_text.delete(""+str(self.p2_pc.value)+".0",""+str(self.p2_pc.value)+".5")
             self.code_text.insert(""+str(self.p2_pc.value)+".0","["+str(self.p2_pc.value).rjust(3)+"]",'b')
             self.pre_pc2 = self.p2_pc.value
+            with open("variables.txt",'r') as f:
+                buf = f.read()
+            self.variable_text.delete("1.0","end")
+            self.variable_text.insert(tk.INSERT,buf)
     def button11_clicked(self):
         self.vm_value.value = 2
         sleep(0.1)
@@ -448,6 +553,10 @@ class MainFrame(tk.Frame):
             self.code_text.delete(""+str(self.p2_pc.value)+".0",""+str(self.p2_pc.value)+".5")
             self.code_text.insert(""+str(self.p2_pc.value)+".0","["+str(self.p2_pc.value).rjust(3)+"]",'b')
             self.pre_pc2 = self.p2_pc.value
+        with open("variables.txt",'r') as f:
+                buf = f.read()
+        self.variable_text.delete("1.0","end")
+        self.variable_text.insert(tk.INSERT,buf)
     def button12_clicked(self):
         self.vm_value.value = 3
         sleep(0.1)
@@ -462,6 +571,10 @@ class MainFrame(tk.Frame):
                 self.buf = f.read()
             self.value_text.delete("1.0","end")
             sys.stdout = self.rwrite(self.buf)
+        with open("variables.txt",'r') as f:
+                buf = f.read()
+        self.variable_text.delete("1.0","end")
+        self.variable_text.insert(tk.INSERT,buf)
     def button13_clicked(self):
         self.mode_select = '1'
         messagebox.showinfo("message","set up auto mode")
@@ -615,7 +728,18 @@ class User3(tk.Frame):
 #    #    print(i)
 #        sleep(0.1)
 
+def initial_clear():
+    with open("labelcash.txt",'w') as f:
+        f.write("")
+    with open("stdcash.txt",'w') as f:
+        f.write("")
+    with open("valuecash.txt",'w') as f:
+        f.write("")
+    with open("variables.txt",'w') as f:
+        f.write("")
+
 if __name__ == '__main__': 
+    initial_clear()
     root = tk.Tk()
     app = MainFrame(master=root)
     sys.stdout = sys.__stdout__

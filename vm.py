@@ -132,7 +132,7 @@ def executedcommand(stack,rstack,lstack,com,opr,pc,pre,top,rtop,ltop,address,val
         variable_region[opr] = value[opr]
         return (pc+1,pre,stack,top,rtop,tablecount)
 
-def execution(mode,lock,mlock,command,opr,start,end,stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag,parpath,fbtmode,count_pc,variable_region,p1_pc,p2_pc):
+def execution(mode,lock,mlock,command,opr,start,end,stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag,parpath,fbtmode,count_pc,variable_region,p1_pc,p2_pc,value_conflict):
     pc=start
     pre=pc
     top=len(stack)
@@ -205,6 +205,8 @@ def execution(mode,lock,mlock,command,opr,start,end,stack,address,value,tablecou
                     else:
                         with open("labelcash.txt","w") as f:
                             f.write("")
+                    with open("variables.txt",'w') as f:
+                        f.write(""+str(value[0:tablecount.value])+"")
                 
                     if parpath != 0:
                         if command[pre] == 3:
@@ -282,6 +284,8 @@ def execution(mode,lock,mlock,command,opr,start,end,stack,address,value,tablecou
                 if mode == '2':
                     with open("stdcash.txt",'a') as f:
                         f.write("shared variable stack: "+str(value[0:tablecount.value])+"\n\n")
+                with open("variables.txt",'w') as f:
+                    f.write(""+str(value[0:tablecount.value])+"")
             if command[pre] == 8:
                 with open("lstack.txt",'w') as f:
                     for i in range(0,ltop.value-1,2):
@@ -410,6 +414,7 @@ def main(fbtmode,vm_value,mode_select,self,p1_pc,p2_pc):
     ltop = Value('i',0)
     endflag={}
     endflag0=Value('i',0)
+    value_conflict = Value('i',0)
     parflag=0
     count_pc=0
     lock={}
@@ -458,19 +463,19 @@ def main(fbtmode,vm_value,mode_select,self,p1_pc,p2_pc):
                 #mode=input('mode   1:auto 2:select >> ')
                 mode= mode_select
             #exec initial part
-            stack=execution(mode,lockfree,lockfree,com,opr,0,start[0],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc,variable_region,p1_pc,p2_pc)
+            stack=execution(mode,lockfree,lockfree,com,opr,0,start[0],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc,variable_region,p1_pc,p2_pc,value_conflict)
             if mode=='2':
                 for i in range(0,parflag,1):
                     lock[i].acquire()
                 process={}
                 #generate parallel process
                 for i in range(0,parflag,1):        
-                    process[i]=Process(target=execution,args=(mode,lock[i],mlock,com,opr,start[i],end[i],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag[i],i+1,fbtmode,count_pc,variable_region,p1_pc,p2_pc))
+                    process[i]=Process(target=execution,args=(mode,lock[i],mlock,com,opr,start[i],end[i],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag[i],i+1,fbtmode,count_pc,variable_region,p1_pc,p2_pc,value_conflict))
             if mode=='1':
                 process={}
                 #generate parallel process
                 for i in range(0,parflag,1):        
-                    process[i]=Process(target=execution,args=(mode,lock[0],mlock,com,opr,start[i],end[i],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag[i],i+1,fbtmode,count_pc,variable_region,p1_pc,p2_pc))
+                    process[i]=Process(target=execution,args=(mode,lock[0],mlock,com,opr,start[i],end[i],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag[i],i+1,fbtmode,count_pc,variable_region,p1_pc,p2_pc,value_conflict))
             for i in range(0,parflag,1):
                     process[i].start()
             #monitor
@@ -502,14 +507,14 @@ def main(fbtmode,vm_value,mode_select,self,p1_pc,p2_pc):
                 stack[i]=value[i]
             with open("stdcash.txt",'w') as f:
                 f.write("")
-            execution(mode,lockfree,lockfree,com,opr,end[parflag-1]+1,len(com),stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc,variable_region,p1_pc,p2_pc)
+            execution(mode,lockfree,lockfree,com,opr,end[parflag-1]+1,len(com),stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc,variable_region,p1_pc,p2_pc,value_conflict)
             if mode_select == '1':
                 with open("stdout.txt",mode='r') as f:
                     buf = f.read()
                     sys.stdout = self.write(buf)
         elif parflag==0:
             mode='1'
-            execution(mode,lockfree,mlock,com,opr,0,len(com),stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc,variable_region,p1_pc,p2_pc)
+            execution(mode,lockfree,mlock,com,opr,0,len(com),stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc,variable_region,p1_pc,p2_pc,value_conflict)
         forward(ltop.value,rtop.value,fbtmode,value,lstack,rstack,count_pc,com,opr)
         if mode_select == '1':
             with open("lstack.txt",'r') as lf:
@@ -564,12 +569,12 @@ def main(fbtmode,vm_value,mode_select,self,p1_pc,p2_pc):
             for i in range(0,parflag,1):
                 lock[i].acquire()
             process={}
-            execution(mode,lockfree,lockfree,com,opr,0,end[0],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc,variable_region,p1_pc,p2_pc)
+            execution(mode,lockfree,lockfree,com,opr,0,end[0],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc,variable_region,p1_pc,p2_pc,value_conflict)
             #generate process
             with open("stdcash.txt","w") as f:
                 f.write("")
             for i in range(0,parflag,1):
-                process[i]=Process(target=execution,args=(mode,lock[parflag-i-1],mlock,com,opr,end[i],start[i],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag[i],parflag-i,fbtmode,count_pc,variable_region,p1_pc,p2_pc))
+                process[i]=Process(target=execution,args=(mode,lock[parflag-i-1],mlock,com,opr,end[i],start[i],stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag[i],parflag-i,fbtmode,count_pc,variable_region,p1_pc,p2_pc,value_conflict))
             for i in range(0,parflag,1):
                 process[i].start()
             a='2'
@@ -593,9 +598,10 @@ def main(fbtmode,vm_value,mode_select,self,p1_pc,p2_pc):
                     ifflag=0
                     endcount=0
                     for i in range(0,parflag,1):
-                        if int(lstack[ltop.value])==i+1 and ifflag==0:
+                        if (int(lstack[ltop.value])==i+1 and ifflag==0):
                             lock[i].release()
                             ifflag=1
+                            value_conflict.value=0
                     for i in range(0,parflag,1):
                         if endflag[i].value==1:
                             endcount=endcount+1
@@ -606,14 +612,14 @@ def main(fbtmode,vm_value,mode_select,self,p1_pc,p2_pc):
             #exec final part
             with open("stdcash.txt",'w') as f:
                 f.write("")
-            execution(mode,lockfree,lockfree,com,opr,start[parflag-1]+1,count_pc,stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc,variable_region,p1_pc,p2_pc)
+            execution(mode,lockfree,lockfree,com,opr,start[parflag-1]+1,count_pc,stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc,variable_region,p1_pc,p2_pc,value_conflict)
 
             if mode == '1':
                 with open("stdout.txt",'r') as f:
                     buf = f.read()
                     sys.stdout = self.write(buf)
         elif parflag==0:
-            execution(mode,lockfree,lockfree,com,opr,0,len(com),stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc,variable_region,p1_pc,p2_pc)
+            execution(mode,lockfree,lockfree,com,opr,0,len(com),stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,fbtmode,count_pc,variable_region,p1_pc,p2_pc,value_conflict)
     elif fbtmode=='t':
         (start,end,com,opr,count_pc,parflag,variable_region)=coderead(start,end,com,opr,count_pc,parflag,fbtmode,variable_region)
         forward(ltop.value,rtop.value,fbtmode,value,lstack,rstack,count_pc,com,opr)
