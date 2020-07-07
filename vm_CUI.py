@@ -312,6 +312,7 @@ if __name__ == '__main__':
     ltop = Value('i',0)
     endflag={}
     endflag0=Value('i',0)
+    notlabelflag=0
     lock={}
     variable_region = []
     
@@ -408,27 +409,91 @@ if __name__ == '__main__':
             for i in range(0,parflag,1):
                 process[i].start()
             a='2'
+            if len(ldata)==0:
+                notlabelflag = 1
             if mode=='2':
-                while a!='esc':
-                    a=input('process '+str(lstack[ltop.value])+' ')
-                    mlock.acquire(False)
-                    for i in range(0,parflag,1):
-                        if int(lstack[ltop.value])==i+1:
-                            lock[i].release()
+                if notlabelflag==0:
+                    while a!='esc':
+                        a=input('process '+str(lstack[ltop.value])+' ')
+                        mlock.acquire(False)
+                        for i in range(0,parflag,1):
+                            if int(lstack[ltop.value])==i+1:
+                                lock[i].release()
+                elif notlabelflag==1:
+                    preprocess=0
+                    while a!='esc':
+                        endcount=0
+                        a=input('process '+str(lstack[ltop.value])+' ')
+                        mlock.acquire(False)
+                        if int(rstack[rtop.value])!=0:
+                            for i in range(0,parflag,1):
+                                if int(rstack[rtop.value])==i+1:
+                                    preprocess=i
+                                    lock[i].release()
+                        elif int(rstack[rtop.value])==0 and ((preprocess==0 and endflag[1].value==0) or (preprocess==1 and endflag[0].value==0)):
+                            lock[preprocess].release()
+                        elif (preprocess==0 and endflag[1].value==1) or (preprocess==1 and endflag[0].value==1):
+                            if preprocess==0:
+                                lock[1].release()
+                            elif preprocess==1:
+                                lock[0].release()
+                                #for i in range(0,parflag,1):
+                                #    if preprocess==i and endflag[parflag-i-1].value==0:
+                                #        lock[preprocess].release()
+                                #for i in range(0,parflag,1):
+                                #    if preprocess==i and endflag[parflag-i-1].value==1:
+                                #        lock[parflag-i-1].release()
+                        for i in range(0,parflag,1):
+                            if endflag[i].value==1:
+                                endcount=endcount+1
+                        if endcount==parflag:
+                            a='esc'
+
             elif mode=='1':
-                while a!='esc':
-                    mlock.acquire()
-                    ifflag=0
-                    endcount=0
-                    for i in range(0,parflag,1):
-                        if int(lstack[ltop.value])==i+1 and ifflag==0:
-                            lock[i].release()
-                            ifflag=1
-                    for i in range(0,parflag,1):
-                        if endflag[i].value==1:
-                            endcount=endcount+1
-                    if endcount==parflag:
-                        a='esc'
+                if notlabelflag==0:
+                    while a!='esc':
+                        mlock.acquire()
+                        ifflag=0
+                        endcount=0
+                        for i in range(0,parflag,1):
+                            if (int(lstack[ltop.value])==i+1 and ifflag==0):
+                                lock[i].release()
+                                ifflag=1
+                        for i in range(0,parflag,1):
+                            if endflag[i].value==1:
+                                endcount=endcount+1
+                        if endcount==parflag:
+                            a='esc'
+                elif notlabelflag==1:
+                    preprocess=0
+                    while a!='esc':
+                        mlock.acquire()
+                        ifflag=0
+                        endcount=0
+                        if int(rstack[rtop.value]!=0):
+                            for i in range(0,parflag,1):
+                                if (int(rstack[rtop.value])==i+1 and ifflag==0):
+                                    preprocess=i
+                                    lock[i].release()
+                                    ifflag=1
+                        elif int(rstack[rtop.value])==0 and ((preprocess==0 and endflag[1].value==0) or (preprocess==1 and endflag[0].value==0)):
+                            lock[preprocess].release()
+                        elif (preprocess==0 and endflag[1].value==1) or (preprocess==1 and endflag[0].value==1):
+                            if preprocess==0:
+                                lock[1].release()
+                            elif preprocess==1:
+                                lock[0].release()
+                            #for i in range(0,parflag,1):
+                            #    if preprocess==i and endflag[parflag-i-1].value==0:
+                            #        lock[preprocess].release()
+                            #for i in range(0,parflag,1):
+                            #    if preprocess==i and endflag[parflag-i-1].value:
+                            #        lock[parflag-i-1].release()
+                        for i in range(0,parflag,1):
+                            if endflag[i].value==1:
+                                endcount=endcount+1
+                        if endcount==parflag:
+                            a='esc'
             for i in range(0,parflag,1):
                 process[i].join()
             execution(mode,lockfree,lockfree,com,opr,start[parflag-1]+1,count_pc,stack,address,value,tablecount,rstack,lstack,rtop,ltop,endflag0,0,variable_region)

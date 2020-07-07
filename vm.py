@@ -414,6 +414,7 @@ def main(fbtmode,vm_value,mode_select,self,p1_pc,p2_pc):
     ltop = Value('i',0)
     endflag={}
     endflag0=Value('i',0)
+    notlabelflag=0
     value_conflict = Value('i',0)
     parflag=0
     count_pc=0
@@ -578,35 +579,88 @@ def main(fbtmode,vm_value,mode_select,self,p1_pc,p2_pc):
             for i in range(0,parflag,1):
                 process[i].start()
             a='2'
+            if len(ldata)==0:
+                notlabelflag = 1
             if mode=='2':
-                while a!=3:
-                    #a=input('process '+str(lstack[ltop.value])+' ')
-                    vm_value.value = 0
-                    while vm_value.value == 0:
-                        i = 0
-                    a = vm_value.value
-                    mlock.acquire(False)
-                    for i in range(0,parflag,1):
-                        if int(lstack[ltop.value])==i+1:
-                            lock[i].release()
-                    if endflag[0].value == 1 and endflag[1].value == 1:
-                        with open("stdcash.txt",'w') as f:
-                            f.write("")
+                if notlabelflag==0:
+                    while a!=3:
+                        #a=input('process '+str(lstack[ltop.value])+' ')
+                        vm_value.value = 0
+                        while vm_value.value == 0:
+                            i = 0
+                        a = vm_value.value
+                        mlock.acquire(False)
+                        for i in range(0,parflag,1):
+                            if int(lstack[ltop.value])==i+1:
+                                lock[i].release()
+                        if endflag[0].value == 1 and endflag[1].value == 1:
+                            with open("stdcash.txt",'w') as f:
+                                f.write("")
+                elif notlabelflag==1:
+                    preprocess=0
+                    while a!=3:
+                        #a=input('process '+str(lstack[ltop.value])+' ')
+                        vm_value.value = 0
+                        while vm_value.value == 0:
+                            i = 0
+                        a = vm_value.value
+                        mlock.acquire(False)
+                        if int(rstack[rtop.value])!=0:
+                            for i in range(0,parflag,1):
+                                if int(rstack[rtop.value])==i+1:
+                                    preprocess=i
+                                    lock[i].release()
+                        elif int(rstack[rtop.value])==0 and ((preprocess==0 and endflag[1].value==0) or (preprocess==1 and endflag[0].value==0)):
+                            lock[preprocess].release()
+                        elif (preprocess==0 and endflag[1].value==1) or (preprocess==1 and endflag[0].value==1):
+                            if preprocess==0:
+                                lock[1].release()
+                            elif preprocess==1:
+                                lock[0].release()
+                        if endflag[0].value == 1 and endflag[1].value == 1:
+                            with open("stdcash.txt",'w') as f:
+                                f.write("")
+                            a = 3
             elif mode=='1':
-                while a!='esc':
-                    mlock.acquire()
-                    ifflag=0
-                    endcount=0
-                    for i in range(0,parflag,1):
-                        if (int(lstack[ltop.value])==i+1 and ifflag==0):
-                            lock[i].release()
-                            ifflag=1
-                            value_conflict.value=0
-                    for i in range(0,parflag,1):
-                        if endflag[i].value==1:
-                            endcount=endcount+1
-                    if endcount==parflag:
-                        a='esc'
+                if notlabelflag==0:
+                    while a!='esc':
+                        mlock.acquire()
+                        ifflag=0
+                        endcount=0
+                        for i in range(0,parflag,1):
+                            if (int(lstack[ltop.value])==i+1 and ifflag==0):
+                                lock[i].release()
+                                ifflag=1
+                                value_conflict.value=0
+                        for i in range(0,parflag,1):
+                            if endflag[i].value==1:
+                                endcount=endcount+1
+                        if endcount==parflag:
+                            a='esc'
+                elif notlabelflag==1:
+                    preprocess=0
+                    while a!='esc':
+                        mlock.acquire()
+                        ifflag=0
+                        endcount=0
+                        if int(rstack[rtop.value]!=0):
+                            for i in range(0,parflag,1):
+                                if (int(rstack[rtop.value])==i+1 and ifflag==0):
+                                    preprocess=i
+                                    lock[i].release()
+                                    ifflag=1
+                        elif int(rstack[rtop.value]==0) and ((preprocess==0 and endflag[1].value==0) or (preprocess==1 and endflag[0].value==0)):
+                            lock[preprocess].release()
+                        elif (preprocess==0 and endflag[1].value==1) or (preprocess==1 and endflag[0].value==1):
+                            if preprocess==0:
+                                lock[1].release()
+                            elif preprocess==1:
+                                lock[0].release()
+                        for i in range(0,parflag,1):
+                            if endflag[i].value==1:
+                                endcount=endcount+1
+                        if endcount==parflag:
+                            a='esc'
             for i in range(0,parflag,1):
                 process[i].join()
             #exec final part
